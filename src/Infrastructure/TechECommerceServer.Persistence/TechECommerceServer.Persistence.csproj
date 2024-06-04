@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\TechECommerceServer.Application\TechECommerceServer.Application.csproj" />
     <ProjectReference Include="..\..\Core\TechECommerceServer.Domain\TechECommerceServer.Domain.csproj" />
   </ItemGroup>
 
