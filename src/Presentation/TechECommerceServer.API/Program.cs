@@ -6,7 +6,15 @@ internal class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        // Add custom services to the container.
+        // Add custom services to the container.        
+        builder.Services.AddCors(options => // note: initially, these were the necessary configurations, and the next step is to write a custom http client server on any client app.
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+        });
+
         builder.Services.AddPersistenceServices();
 
         // Add services to the container.
@@ -25,6 +33,7 @@ internal class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors();
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
