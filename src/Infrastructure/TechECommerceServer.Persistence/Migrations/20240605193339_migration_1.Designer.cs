@@ -12,7 +12,7 @@ using TechECommerceServer.Persistence.Contexts;
 namespace TechECommerceServer.Persistence.Migrations
 {
     [DbContext(typeof(TechECommerceServerDbContext))]
-    [Migration("20240605110700_migration_1")]
+    [Migration("20240605193339_migration_1")]
     partial class migration_1
     {
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace TechECommerceServer.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Discount")
+                    b.Property<decimal?>("Discount")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime?>("ModifiedDate")

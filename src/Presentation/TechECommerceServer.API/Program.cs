@@ -1,3 +1,5 @@
+using TechECommerceServer.Application;
+using TechECommerceServer.Infrastructure;
 using TechECommerceServer.Persistence;
 
 internal class Program
@@ -15,6 +17,8 @@ internal class Program
             });
         });
 
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices();
         builder.Services.AddPersistenceServices();
 
         // Add services to the container.

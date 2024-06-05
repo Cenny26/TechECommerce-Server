@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\TechECommerceServer.Application\TechECommerceServer.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.Infrastructure\TechECommerceServer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.Persistence\TechECommerceServer.Persistence.csproj" />
   </ItemGroup>
 

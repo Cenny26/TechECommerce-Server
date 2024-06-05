@@ -35,7 +35,7 @@ namespace TechECommerceServer.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Discount")
+                    b.Property<decimal?>("Discount")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime?>("ModifiedDate")
