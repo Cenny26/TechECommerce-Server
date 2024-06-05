@@ -12,7 +12,7 @@ using TechECommerceServer.Persistence.Contexts;
 namespace TechECommerceServer.Persistence.Migrations
 {
     [DbContext(typeof(TechECommerceServerDbContext))]
-    [Migration("20240603175035_migration_1")]
+    [Migration("20240605110700_migration_1")]
     partial class migration_1
     {
         /// <inheritdoc />
@@ -31,17 +31,7 @@ namespace TechECommerceServer.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -50,12 +40,6 @@ namespace TechECommerceServer.Persistence.Migrations
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("numeric");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
