@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using TechECommerceServer.Application.Exceptions;
 
 namespace TechECommerceServer.Application
 {
@@ -13,6 +14,8 @@ namespace TechECommerceServer.Application
             {
                 configuration.RegisterServicesFromAssemblies(assembly);
             });
+
+            services.AddTransient<ExceptionMiddleware>();
         }
     }
 }

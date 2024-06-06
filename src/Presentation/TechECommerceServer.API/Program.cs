@@ -1,4 +1,5 @@
 using TechECommerceServer.Application;
+using TechECommerceServer.Application.Exceptions;
 using TechECommerceServer.Infrastructure;
 using TechECommerceServer.Persistence;
 
@@ -8,7 +9,7 @@ internal class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        // Add custom services to the container.        
+        // Add custom services to the container.
         builder.Services.AddCors(options => // note: initially, these were the necessary configurations, and the next step is to write a custom http client server on any client app.
         {
             options.AddDefaultPolicy(policy =>
@@ -36,6 +37,9 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        // Configure custom services to pipeline.
+        app.ConfigureExceptionHandlingMiddleware();
 
         app.UseCors();
         app.UseHttpsRedirection();
