@@ -8,6 +8,6 @@ namespace TechECommerceServer.Application.Features.Commands.Product.CreateProduc
         public string Description { get; set; }
         public int StockQuantity { get; set; }
         public decimal Price { get; set; }
-        public decimal? Discount { get; set; }
+        public decimal Discount { get; set; }
     }
 }
