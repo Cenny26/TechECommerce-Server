@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using TechECommerceServer.Application.Exceptions.Utils;
 
 namespace TechECommerceServer.Application.Exceptions
@@ -24,10 +25,16 @@ namespace TechECommerceServer.Application.Exceptions
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = statusCode;
 
+            if (exception.GetType() == typeof(ValidationException))
+                return httpContext.Response.WriteAsync(new ExceptionModel()
+                {
+                    Errors = ((ValidationException)exception).Errors.Select(element => element.ErrorMessage),
+                    StatusCode = StatusCodes.Status422UnprocessableEntity
+                }.ToString());
+
             List<string> errors = new List<string>()
             {
-                $"Error message: {exception.Message}",
-                $"Message description: {exception.InnerException?.ToString()}"
+                $"Error message: {exception.Message}"
             };
 
             return httpContext.Response.WriteAsync(new ExceptionModel()

@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 using System.Reflection;
+using TechECommerceServer.Application.Behaviors.Validation;
 using TechECommerceServer.Application.Exceptions;
 
 namespace TechECommerceServer.Application
@@ -15,7 +19,11 @@ namespace TechECommerceServer.Application
                 configuration.RegisterServicesFromAssemblies(assembly);
             });
 
+            services.AddValidatorsFromAssembly(assembly);
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
+
             services.AddTransient<ExceptionMiddleware>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
         }
     }
 }
