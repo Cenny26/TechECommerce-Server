@@ -19,5 +19,7 @@ namespace TechECommerceServer.Domain.Entities
         public int StockQuantity { get; set; }
         public decimal Price { get; set; }
         public decimal? Discount { get; set; } = 0;
+
+        public ICollection<ProductImage> ProductImage { get; set; }
     }
 }

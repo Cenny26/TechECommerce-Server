@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Reflection;
@@ -15,17 +16,26 @@ namespace TechECommerceServer.Application
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
 
+            // Configure MediatR
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssemblies(assembly);
             });
 
+            // Register custom rules and validators
             services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRule));
             services.AddValidatorsFromAssembly(assembly);
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
 
+            // Add custom middleware
             services.AddTransient<ExceptionMiddleware>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
+
+            // Configure API behavior options
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         private static IServiceCollection AddRulesFromAssemblyContaining(this IServiceCollection services, Assembly assembly, Type type)
