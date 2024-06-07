@@ -20,4 +20,8 @@
     <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.Persistence\TechECommerceServer.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

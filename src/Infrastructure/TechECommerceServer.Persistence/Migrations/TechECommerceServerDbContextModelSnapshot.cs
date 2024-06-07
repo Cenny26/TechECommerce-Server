@@ -51,10 +51,6 @@ namespace TechECommerceServer.Persistence.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("character varying(13)");
 
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("text");

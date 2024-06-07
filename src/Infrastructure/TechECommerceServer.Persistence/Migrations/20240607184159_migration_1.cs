@@ -18,7 +18,6 @@ namespace TechECommerceServer.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StorageType = table.Column<string>(type: "text", nullable: false),
                     FileName = table.Column<string>(type: "text", nullable: false),
-                    FileExtension = table.Column<string>(type: "text", nullable: false),
                     Path = table.Column<string>(type: "text", nullable: false),
                     Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)

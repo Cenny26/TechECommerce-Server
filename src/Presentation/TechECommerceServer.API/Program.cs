@@ -1,6 +1,7 @@
 using TechECommerceServer.Application;
 using TechECommerceServer.Application.Exceptions;
 using TechECommerceServer.Infrastructure;
+using TechECommerceServer.Infrastructure.Services.Storage.Local;
 using TechECommerceServer.Persistence;
 
 internal class Program
@@ -22,6 +23,9 @@ internal class Program
         builder.Services.AddInfrastructureServices();
         builder.Services.AddPersistenceServices();
 
+        // Add services for storage system.
+        builder.Services.AddStorage<LocalStorage>();
+
         // Add services to the container.
         builder.Services.AddControllers();
 
@@ -40,6 +44,9 @@ internal class Program
 
         // Configure custom services to pipeline.
         app.ConfigureExceptionHandlingMiddleware();
+
+        // Add services for file system.
+        app.UseStaticFiles();
 
         app.UseCors();
         app.UseHttpsRedirection();

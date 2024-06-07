@@ -12,7 +12,7 @@ using TechECommerceServer.Persistence.Contexts;
 namespace TechECommerceServer.Persistence.Migrations
 {
     [DbContext(typeof(TechECommerceServerDbContext))]
-    [Migration("20240607115629_migration_1")]
+    [Migration("20240607184159_migration_1")]
     partial class migration_1
     {
         /// <inheritdoc />
@@ -53,10 +53,6 @@ namespace TechECommerceServer.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("character varying(13)");
-
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("FileName")
                         .IsRequired()
