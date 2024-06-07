@@ -34,6 +34,23 @@ namespace TechECommerceServer.Persistence.Concretes.Repositories
             return await queryable.ToListAsync();
         }
 
+        // note: retrieves a limited subset of entities from the database using paging, with optional filtering, including related entities, and ordering.
+        public async Task<IList<T>> GetLimitedByPagingAsync(int currentPage, int pageSize, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false)
+        {
+            IQueryable<T> queryable = Table;
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (include is not null)
+                queryable = include(queryable);
+            if (predicate is not null)
+                queryable = queryable.Where(predicate);
+            if (orderBy is not null)
+                return await orderBy(queryable).Skip(currentPage * pageSize).Take(pageSize).ToListAsync();
+
+            return await queryable.Skip(currentPage * pageSize).Take(pageSize).ToListAsync();
+        }
+
         // note: retrieves an entity from the database asynchronously by its unique identifier, with an option to disable tracking for performance.
         public async Task<T> GetByIdAsync(string id, bool enableTracking = false)
         {
