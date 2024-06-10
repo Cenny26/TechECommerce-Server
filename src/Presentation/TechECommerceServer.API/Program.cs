@@ -21,7 +21,7 @@ internal class Program
 
         IWebHostEnvironment hostEnvironment = builder.Environment;
         builder.Configuration
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(hostEnvironment.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: false)
             .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true);
 
