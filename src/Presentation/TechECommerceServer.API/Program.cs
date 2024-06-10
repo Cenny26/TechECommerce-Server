@@ -19,8 +19,14 @@ internal class Program
             });
         });
 
+        IWebHostEnvironment hostEnvironment = builder.Environment;
+        builder.Configuration
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true);
+
         builder.Services.AddApplicationServices();
-        builder.Services.AddInfrastructureServices();
+        builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddPersistenceServices();
 
         // Add services for storage system.

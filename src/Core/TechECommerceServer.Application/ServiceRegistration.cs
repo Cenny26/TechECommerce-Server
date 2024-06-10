@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Reflection;
 using TechECommerceServer.Application.Bases;
+using TechECommerceServer.Application.Behaviors.Cache;
 using TechECommerceServer.Application.Behaviors.Validation;
 using TechECommerceServer.Application.Exceptions;
 
@@ -29,7 +30,10 @@ namespace TechECommerceServer.Application
 
             // Add custom middleware
             services.AddTransient<ExceptionMiddleware>();
+
+            // Add custom behaviors
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RedisCacheBehavior<,>));
 
             // Configure API behavior options
             services.Configure<ApiBehaviorOptions>(options =>
