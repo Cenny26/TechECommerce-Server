@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
+using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
 
 namespace TechECommerceServer.API.Controllers
 {
@@ -23,10 +24,17 @@ namespace TechECommerceServer.API.Controllers
             return StatusCode((int)HttpStatusCode.Created);
         }
 
-        [HttpGet] // POST: api/Products/GetAllProducts
+        [HttpGet] // GET: api/Products/GetAllProducts
         public async Task<IActionResult> GetAllProducts()
         {
             IList<GetAllProductsQueryResponse> response = await _mediator.Send(new GetAllProductsQueryRequest());
+            return Ok(response);
+        }
+
+        [HttpGet("{Id:guid}")] // GET: api/Products/GetProductById
+        public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest getProductByIdQueryRequest)
+        {
+            GetProductByIdQueryResponse response = await _mediator.Send(getProductByIdQueryRequest);
             return Ok(response);
         }
     }

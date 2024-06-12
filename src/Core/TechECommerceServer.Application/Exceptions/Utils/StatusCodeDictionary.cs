@@ -13,7 +13,8 @@ namespace TechECommerceServer.Application.Exceptions.Utils
             { typeof(ValidationException), StatusCodes.Status422UnprocessableEntity },
             { typeof(UnauthorizedAccessException), StatusCodes.Status401Unauthorized },
             { typeof(InvalidOperationException), StatusCodes.Status409Conflict },
-            { typeof(NotImplementedException), StatusCodes.Status501NotImplemented }
+            { typeof(NotImplementedException), StatusCodes.Status501NotImplemented },
+            { typeof(ArgumentNullException), StatusCodes.Status400BadRequest }
         };
     }
 }
