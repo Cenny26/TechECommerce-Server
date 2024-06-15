@@ -2,6 +2,6 @@
 {
     public static class DefaultCacheVariables
     {
-        public static double StandartCacheTime = 60;
+        public static double StandardCacheTime = 60;
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
+using TechECommerceServer.Application.Features.Queries.Product.GetLimitedProductsByPaging;
 using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
 
 namespace TechECommerceServer.API.Controllers
@@ -31,7 +32,14 @@ namespace TechECommerceServer.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{Id:guid}")] // GET: api/Products/GetProductById
+        [HttpGet] // GET: api/Products/GetLimitedProductsByPaging?{CurrentPage:int}&{PageSize:int}
+        public async Task<IActionResult> GetLimitedProductsByPaging([FromQuery] GetLimitedProductsByPagingQueryRequest getLimitedProductsByPagingQueryRequest)
+        {
+            GetLimitedProductsByPagingQueryResponse response = await _mediator.Send(getLimitedProductsByPagingQueryRequest);
+            return Ok(response);
+        }
+
+        [HttpGet("{Id:guid}")] // GET: api/Products/GetProductById/{Id:guid}
         public async Task<IActionResult> GetProductById([FromRoute] GetProductByIdQueryRequest getProductByIdQueryRequest)
         {
             GetProductByIdQueryResponse response = await _mediator.Send(getProductByIdQueryRequest);

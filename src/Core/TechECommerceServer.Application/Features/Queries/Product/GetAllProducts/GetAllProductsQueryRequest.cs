@@ -9,6 +9,6 @@ namespace TechECommerceServer.Application.Features.Queries.Product.GetAllProduct
         public string CacheKey => "AllProducts";
 
         // note: reducing the default cache time to 60 minutes is only valid for the current request.
-        public double CacheTime => DefaultCacheVariables.StandartCacheTime;
+        public double CacheTime => DefaultCacheVariables.StandardCacheTime;
     }
 }
