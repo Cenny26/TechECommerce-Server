@@ -6,6 +6,7 @@ using TechECommerceServer.Application.Abstractions.Storage;
 using TechECommerceServer.Domain.Enums;
 using TechECommerceServer.Infrastructure.Services.Cache;
 using TechECommerceServer.Infrastructure.Services.Storage;
+using TechECommerceServer.Infrastructure.Services.Storage.Azure;
 using TechECommerceServer.Infrastructure.Services.Storage.Local;
 
 namespace TechECommerceServer.Infrastructure
@@ -38,11 +39,14 @@ namespace TechECommerceServer.Infrastructure
 
         public static void AddStorage(this IServiceCollection services, StorageType storageType)
         {
-            // todo: case Azure need to scoped for AzureStorage!
+            // done: case Azure need to scoped for AzureStorage!
             switch (storageType)
             {
                 case StorageType.LocalStorage:
                     services.AddScoped<IStorage, LocalStorage>();
+                    break;
+                case StorageType.AzureStorage:
+                    services.AddScoped<IStorage, AzureStorage>();
                     break;
                 default:
                     services.AddScoped<IStorage, LocalStorage>();
