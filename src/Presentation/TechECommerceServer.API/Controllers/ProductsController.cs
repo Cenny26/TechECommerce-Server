@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
+using TechECommerceServer.Application.Features.Commands.Product.UpdateProduct;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
 using TechECommerceServer.Application.Features.Queries.Product.GetLimitedProductsByPaging;
 using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
@@ -23,6 +24,13 @@ namespace TechECommerceServer.API.Controllers
         {
             await _mediator.Send(createProductCommandRequest);
             return StatusCode((int)HttpStatusCode.Created);
+        }
+
+        [HttpPut] // PUT: api/Products/UpdateProduct
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommandRequest updateProductCommandRequest)
+        {
+            await _mediator.Send(updateProductCommandRequest);
+            return StatusCode((int)HttpStatusCode.Accepted);
         }
 
         [HttpGet] // GET: api/Products/GetAllProducts

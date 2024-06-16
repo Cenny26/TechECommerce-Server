@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
+using TechECommerceServer.Application.Features.Commands.Product.UpdateProduct;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
 using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
 using TechECommerceServer.Application.Helpers.Product;
@@ -18,6 +19,7 @@ namespace TechECommerceServer.Infrastructure.Services.AutoMapper.Profiles.Produc
                 .ForMember(destinationMember => destinationMember.DiscountedPrice, memberOptions => memberOptions.MapFrom(src => ProductPrice.CalculateDiscountedPrice(src.Price, src.Discount)));
             CreateMap<Domain.Entities.Product, GetProductByIdQueryResponse>()
                 .ForMember(destinationMember => destinationMember.DiscountedPrice, memberOptions => memberOptions.MapFrom(src => ProductPrice.CalculateDiscountedPrice(src.Price, src.Discount)));
+            CreateMap<UpdateProductCommandRequest, Domain.Entities.Product>().ReverseMap();
         }
     }
 }
