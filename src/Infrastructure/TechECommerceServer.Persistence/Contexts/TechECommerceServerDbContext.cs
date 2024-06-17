@@ -25,7 +25,8 @@ namespace TechECommerceServer.Persistence.Contexts
                 _ = data.State switch
                 {
                     EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
-                    EntityState.Modified => data.Entity.ModifiedDate = DateTime.UtcNow
+                    EntityState.Modified => data.Entity.ModifiedDate = DateTime.UtcNow,
+                    _ => DateTime.UtcNow
                 };
             }
 

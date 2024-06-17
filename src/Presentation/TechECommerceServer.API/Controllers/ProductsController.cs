@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
 using TechECommerceServer.Application.Features.Commands.Product.UpdateProduct;
+using TechECommerceServer.Application.Features.Commands.ProductImage.UploadProductImage;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
 using TechECommerceServer.Application.Features.Queries.Product.GetLimitedProductsByPaging;
 using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
@@ -52,6 +53,16 @@ namespace TechECommerceServer.API.Controllers
         {
             GetProductByIdQueryResponse response = await _mediator.Send(getProductByIdQueryRequest);
             return Ok(response);
+        }
+
+        [HttpPost] // POST: api/Products/UploadProductImage?{Id:guid}
+        public async Task<IActionResult> UploadProductImage([FromQuery] UploadProductImageCommandRequest uploadProductImageCommandRequest)
+        {
+            // todo: not to manually provide the files received during the [post] request!
+            uploadProductImageCommandRequest.Files = HttpContext.Request.Form.Files;
+
+            await _mediator.Send(uploadProductImageCommandRequest);
+            return Ok((int)HttpStatusCode.Accepted);
         }
     }
 }

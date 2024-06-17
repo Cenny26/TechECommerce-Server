@@ -16,7 +16,7 @@ namespace TechECommerceServer.Infrastructure.Services.Storage.Local
 
         public async Task<List<(string fileName, string pathOrContainerName)>> UploadFileAsync(string path, IFormFileCollection files)
         {
-            // example path: wwwroot\\resouce\\files\\product\\photo-image
+            // example path: wwwroot\\resource\\files\\product\\photo-images
             string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);

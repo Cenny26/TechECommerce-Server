@@ -12,7 +12,7 @@ using TechECommerceServer.Persistence.Contexts;
 namespace TechECommerceServer.Persistence.Migrations
 {
     [DbContext(typeof(TechECommerceServerDbContext))]
-    [Migration("20240607184159_migration_1")]
+    [Migration("20240617112743_migration_1")]
     partial class migration_1
     {
         /// <inheritdoc />
@@ -27,13 +27,13 @@ namespace TechECommerceServer.Persistence.Migrations
 
             modelBuilder.Entity("ProductProductImage", b =>
                 {
-                    b.Property<Guid>("ProductImageId")
+                    b.Property<Guid>("ProductImagesId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductsId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("ProductImageId", "ProductsId");
+                    b.HasKey("ProductImagesId", "ProductsId");
 
                     b.HasIndex("ProductsId");
 
@@ -120,7 +120,7 @@ namespace TechECommerceServer.Persistence.Migrations
                 {
                     b.HasOne("TechECommerceServer.Domain.Entities.ProductImage", null)
                         .WithMany()
-                        .HasForeignKey("ProductImageId")
+                        .HasForeignKey("ProductImagesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

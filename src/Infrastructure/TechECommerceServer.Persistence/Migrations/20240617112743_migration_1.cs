@@ -49,15 +49,15 @@ namespace TechECommerceServer.Persistence.Migrations
                 name: "ProductProductImage",
                 columns: table => new
                 {
-                    ProductImageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductImagesId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductProductImage", x => new { x.ProductImageId, x.ProductsId });
+                    table.PrimaryKey("PK_ProductProductImage", x => new { x.ProductImagesId, x.ProductsId });
                     table.ForeignKey(
-                        name: "FK_ProductProductImage_Files_ProductImageId",
-                        column: x => x.ProductImageId,
+                        name: "FK_ProductProductImage_Files_ProductImagesId",
+                        column: x => x.ProductImagesId,
                         principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);

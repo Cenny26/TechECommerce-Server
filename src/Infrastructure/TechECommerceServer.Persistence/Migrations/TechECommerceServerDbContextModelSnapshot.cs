@@ -24,13 +24,13 @@ namespace TechECommerceServer.Persistence.Migrations
 
             modelBuilder.Entity("ProductProductImage", b =>
                 {
-                    b.Property<Guid>("ProductImageId")
+                    b.Property<Guid>("ProductImagesId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductsId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("ProductImageId", "ProductsId");
+                    b.HasKey("ProductImagesId", "ProductsId");
 
                     b.HasIndex("ProductsId");
 
@@ -117,7 +117,7 @@ namespace TechECommerceServer.Persistence.Migrations
                 {
                     b.HasOne("TechECommerceServer.Domain.Entities.ProductImage", null)
                         .WithMany()
-                        .HasForeignKey("ProductImageId")
+                        .HasForeignKey("ProductImagesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
