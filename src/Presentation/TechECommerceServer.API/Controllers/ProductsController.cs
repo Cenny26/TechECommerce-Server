@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
+using TechECommerceServer.Application.Features.Commands.Product.RemoveProduct;
 using TechECommerceServer.Application.Features.Commands.Product.UpdateProduct;
 using TechECommerceServer.Application.Features.Commands.ProductImage.UploadProductImage;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
@@ -33,6 +34,13 @@ namespace TechECommerceServer.API.Controllers
         {
             await _mediator.Send(updateProductCommandRequest);
             return StatusCode((int)HttpStatusCode.Accepted);
+        }
+
+        [HttpDelete("{Id:guid}")] // DELETE: api/Products/RemoveProduct/{Id:guid}
+        public async Task<IActionResult> RemoveProduct([FromRoute] RemoveProductCommandRequest removeProductCommandRequest)
+        {
+            await _mediator.Send(removeProductCommandRequest);
+            return Ok((int)HttpStatusCode.Accepted);
         }
 
         [HttpGet] // GET: api/Products/GetAllProducts
