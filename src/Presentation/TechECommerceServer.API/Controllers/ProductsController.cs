@@ -7,6 +7,7 @@ using TechECommerceServer.Application.Features.Commands.ProductImage.UploadProdu
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
 using TechECommerceServer.Application.Features.Queries.Product.GetLimitedProductsByPaging;
 using TechECommerceServer.Application.Features.Queries.Product.GetProductById;
+using TechECommerceServer.Application.Features.Queries.ProductImage.GetMatchedImagesByProductId;
 
 namespace TechECommerceServer.API.Controllers
 {
@@ -63,6 +64,13 @@ namespace TechECommerceServer.API.Controllers
 
             await _mediator.Send(uploadProductImageCommandRequest);
             return Ok((int)HttpStatusCode.Accepted);
+        }
+
+        [HttpGet("{Id:guid}")] // GET: api/Products/GetMatchedImagesByProductId/{Id:guid}
+        public async Task<IActionResult> GetMatchedImagesByProductId([FromRoute] GetMatchedImagesByProductIdQueryRequest getMatchedImagesByProductIdQueryRequest)
+        {
+            List<GetMatchedImagesByProductIdQueryResponse>? response = await _mediator.Send(getMatchedImagesByProductIdQueryRequest);
+            return Ok(response);
         }
     }
 }
