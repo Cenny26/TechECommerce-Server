@@ -4,6 +4,7 @@ using System.Net;
 using TechECommerceServer.Application.Features.Commands.Product.CreateProduct;
 using TechECommerceServer.Application.Features.Commands.Product.RemoveProduct;
 using TechECommerceServer.Application.Features.Commands.Product.UpdateProduct;
+using TechECommerceServer.Application.Features.Commands.ProductImage.RemoveProductImage;
 using TechECommerceServer.Application.Features.Commands.ProductImage.UploadProductImage;
 using TechECommerceServer.Application.Features.Queries.Product.GetAllProducts;
 using TechECommerceServer.Application.Features.Queries.Product.GetLimitedProductsByPaging;
@@ -71,6 +72,13 @@ namespace TechECommerceServer.API.Controllers
             uploadProductImageCommandRequest.Files = HttpContext.Request.Form.Files;
 
             await _mediator.Send(uploadProductImageCommandRequest);
+            return Ok((int)HttpStatusCode.Accepted);
+        }
+
+        [HttpDelete("{Id:guid}")] // DELETE: api/Products/RemoveProductImage/{Id:guid}?{imageId}
+        public async Task<IActionResult> RemoveProductImage(RemoveProductImageCommandRequest removeProductImageCommandRequest)
+        {
+            await _mediator.Send(removeProductImageCommandRequest);
             return Ok((int)HttpStatusCode.Accepted);
         }
 
