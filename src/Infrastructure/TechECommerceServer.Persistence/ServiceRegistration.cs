@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TechECommerceServer.Application.Abstractions.Repositories.File;
 using TechECommerceServer.Application.Abstractions.Repositories.Product;
 using TechECommerceServer.Application.Abstractions.Repositories.ProductImage;
+using TechECommerceServer.Domain.Entities.Identity;
 using TechECommerceServer.Persistence.Concretes.Repositories.File;
 using TechECommerceServer.Persistence.Concretes.Repositories.Product;
 using TechECommerceServer.Persistence.Concretes.Repositories.ProductImage;
@@ -19,6 +20,13 @@ namespace TechECommerceServer.Persistence
             {
                 options.UseNpgsql(DefaultDbConnectionStringConfiguration.ConnectionString);
             });
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<TechECommerceServerDbContext>();
 
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();

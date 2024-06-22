@@ -1,12 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TechECommerceServer.Domain.Entities;
 using TechECommerceServer.Domain.Entities.Common;
+using TechECommerceServer.Domain.Entities.Identity;
 using File = TechECommerceServer.Domain.Entities.File;
 
 namespace TechECommerceServer.Persistence.Contexts
 {
-    public class TechECommerceServerDbContext : DbContext
+    public class TechECommerceServerDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         protected TechECommerceServerDbContext() { }
         public TechECommerceServerDbContext(DbContextOptions options) : base(options)
