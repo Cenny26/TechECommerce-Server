@@ -12,5 +12,13 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.Rules
 
             return Task.CompletedTask;
         }
+
+        public Task GivenAppUserMustBeLoadWhenProcessToLogIn(Domain.Entities.Identity.AppUser appUser)
+        {
+            if (appUser is null)
+                throw new NotUserFoundedException();
+
+            return Task.CompletedTask;
+        }
     }
 }
