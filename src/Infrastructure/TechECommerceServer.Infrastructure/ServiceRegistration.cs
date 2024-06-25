@@ -3,11 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TechECommerceServer.Application.Abstractions.Cache;
 using TechECommerceServer.Application.Abstractions.Storage;
+using TechECommerceServer.Application.Abstractions.Token;
 using TechECommerceServer.Domain.Enums;
 using TechECommerceServer.Infrastructure.Services.Cache;
 using TechECommerceServer.Infrastructure.Services.Storage;
 using TechECommerceServer.Infrastructure.Services.Storage.Azure;
 using TechECommerceServer.Infrastructure.Services.Storage.Local;
+using TechECommerceServer.Infrastructure.Services.Token;
 
 namespace TechECommerceServer.Infrastructure
 {
@@ -26,6 +28,7 @@ namespace TechECommerceServer.Infrastructure
                 options.InstanceName = configuration["Cache:DefaultSettings:InstanceName"];
             });
 
+            services.AddScoped<ITokenHandler, TokenHandler>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IRedisCacheService, RedisCacheService>();
 
