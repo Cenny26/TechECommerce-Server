@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using TechECommerceServer.Application.Features.Commands.AppUser.CreateAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser;
 
@@ -26,9 +25,8 @@ namespace TechECommerceServer.API.Controllers
         [HttpPost] // POST: api/Users/LogInAppUser
         public async Task<IActionResult> LogInAppUser([FromBody] LoginAppUserCommandRequest loginAppUserCommandRequest)
         {
-            // todo: need to change the response type!
-            await _mediator.Send(loginAppUserCommandRequest);
-            return Ok(HttpStatusCode.Processing);
+            LoginAppUserCommandResponse response = await _mediator.Send(loginAppUserCommandRequest);
+            return Ok(response);
         }
     }
 }

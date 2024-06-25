@@ -2,7 +2,7 @@
 
 namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
 {
-    public class LoginAppUserCommandRequest : IRequest<Unit>
+    public class LoginAppUserCommandRequest : IRequest<LoginAppUserCommandResponse>
     {
         public string UserNameOrEmail { get; set; }
         public string Password { get; set; }
