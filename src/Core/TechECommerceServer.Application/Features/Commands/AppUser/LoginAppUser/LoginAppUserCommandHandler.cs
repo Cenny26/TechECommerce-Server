@@ -8,7 +8,7 @@ using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
 using TechECommerceServer.Domain.DTOs.Auth;
 
-namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
+namespace TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser
 {
     public class LogInAppUserCommandHandler : BaseHandler, IRequestHandler<LogInAppUserCommandRequest, LogInAppUserCommandResponse>
     {

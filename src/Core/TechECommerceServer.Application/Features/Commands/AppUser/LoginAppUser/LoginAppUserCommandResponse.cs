@@ -1,6 +1,6 @@
 ﻿using TechECommerceServer.Domain.DTOs.Auth;
 
-namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
+namespace TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser
 {
     public class LogInAppUserCommandResponse
     {

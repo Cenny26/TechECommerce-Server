@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
+namespace TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser
 {
     public class LogInAppUserCommandRequest : IRequest<LogInAppUserCommandResponse>
     {

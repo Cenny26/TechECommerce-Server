@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
+namespace TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser
 {
     public class LogInAppUserCommandValidatior : AbstractValidator<LogInAppUserCommandRequest>
     {

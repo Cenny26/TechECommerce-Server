@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TechECommerceServer.Application.Features.Commands.AppUser.CreateAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.FacebookLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUser;
-using TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser;
 
 namespace TechECommerceServer.API.Controllers
 {
