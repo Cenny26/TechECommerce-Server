@@ -23,6 +23,9 @@ namespace TechECommerceServer.Application
                 configuration.RegisterServicesFromAssemblies(assembly);
             });
 
+            // Configure HttpClient and HttpClientFactory
+            services.AddHttpClient();
+
             // Register custom rules and validators
             services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRule));
             services.AddValidatorsFromAssembly(assembly);

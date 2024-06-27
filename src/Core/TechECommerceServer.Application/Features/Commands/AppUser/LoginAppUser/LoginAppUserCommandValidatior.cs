@@ -2,9 +2,9 @@
 
 namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
 {
-    public class LoginAppUserCommandValidatior : AbstractValidator<LoginAppUserCommandRequest>
+    public class LogInAppUserCommandValidatior : AbstractValidator<LogInAppUserCommandRequest>
     {
-        public LoginAppUserCommandValidatior()
+        public LogInAppUserCommandValidatior()
         {
             RuleFor(x => x.UserNameOrEmail)
                 .NotEmpty().WithMessage("Please do not leave the username|email blank.")

@@ -28,5 +28,13 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.Rules
 
             return Task.CompletedTask;
         }
+
+        public Task GivenAuthTokenMustBeLoadWhenProcessToFacebookLogIn(string authToken)
+        {
+            if (String.IsNullOrEmpty(authToken))
+                throw new InvalidOperationException("A problem was encountered accepting an external (Facebook) 'AuthToken' value!");
+
+            return Task.CompletedTask;
+        }
     }
 }

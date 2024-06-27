@@ -10,13 +10,13 @@ using TechECommerceServer.Domain.DTOs.Auth;
 
 namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
 {
-    public class LoginAppUserCommandHandler : BaseHandler, IRequestHandler<LoginAppUserCommandRequest, LoginAppUserCommandResponse>
+    public class LogInAppUserCommandHandler : BaseHandler, IRequestHandler<LogInAppUserCommandRequest, LogInAppUserCommandResponse>
     {
         private readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
         private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
         private readonly BaseUserRules _userRules;
         private readonly ITokenHandler _tokenHandler;
-        public LoginAppUserCommandHandler(IMapper _mapper, UserManager<Domain.Entities.Identity.AppUser> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager, BaseUserRules userRules, ITokenHandler tokenHandler) : base(_mapper)
+        public LogInAppUserCommandHandler(IMapper _mapper, UserManager<Domain.Entities.Identity.AppUser> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager, BaseUserRules userRules, ITokenHandler tokenHandler) : base(_mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -24,7 +24,7 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
             _tokenHandler = tokenHandler;
         }
 
-        public async Task<LoginAppUserCommandResponse> Handle(LoginAppUserCommandRequest request, CancellationToken cancellationToken)
+        public async Task<LogInAppUserCommandResponse> Handle(LogInAppUserCommandRequest request, CancellationToken cancellationToken)
         {
             Domain.Entities.Identity.AppUser? user = await _userManager.FindByNameAsync(request.UserNameOrEmail) ?? await _userManager.FindByEmailAsync(request.UserNameOrEmail);
             await _userRules.GivenAppUserMustBeLoadWhenProcessToLogIn(user);
@@ -33,7 +33,7 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
             if (signInResult.Succeeded) // note: authentication was successful
             {
                 Token token = _tokenHandler.CreateAccessToken(DefaultTokenVariables.StandardTokenValue); // note: default 60 minute for expire!
-                return new LoginAppUserCommandResponse()
+                return new LogInAppUserCommandResponse()
                 {
                     Token = token
                 };

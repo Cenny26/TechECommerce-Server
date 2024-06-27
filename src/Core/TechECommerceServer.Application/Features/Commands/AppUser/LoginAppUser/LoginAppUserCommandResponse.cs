@@ -2,7 +2,7 @@
 
 namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
 {
-    public class LoginAppUserCommandResponse
+    public class LogInAppUserCommandResponse
     {
         public Token Token { get; set; }
     }
