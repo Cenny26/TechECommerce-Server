@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using TechECommerceServer.Application.Abstractions.Token;
+using TechECommerceServer.Application.Abstractions.Token.Utils;
 using TechECommerceServer.Application.Bases;
 using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
@@ -31,7 +32,7 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser
             SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: false);
             if (signInResult.Succeeded) // note: authentication was successful
             {
-                Token token = _tokenHandler.CreateAccessToken(60); // note: default 60 minute for expire!
+                Token token = _tokenHandler.CreateAccessToken(DefaultTokenVariables.StandardTokenValue); // note: default 60 minute for expire!
                 return new LoginAppUserCommandResponse()
                 {
                     Token = token

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TechECommerceServer.Application.Features.Commands.AppUser.CreateAppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.LoginAppUser;
 
 namespace TechECommerceServer.API.Controllers
@@ -26,6 +27,13 @@ namespace TechECommerceServer.API.Controllers
         public async Task<IActionResult> LogInAppUser([FromBody] LoginAppUserCommandRequest loginAppUserCommandRequest)
         {
             LoginAppUserCommandResponse response = await _mediator.Send(loginAppUserCommandRequest);
+            return Ok(response);
+        }
+
+        [HttpPost] // POST: api/Users/GoogleLogInAppUser
+        public async Task<IActionResult> GoogleLogInAppUser([FromBody] GoogleLogInAppUserCommandRequest googleLogInAppUserRequest)
+        {
+            GoogleLogInAppUserCommandResponse response = await _mediator.Send(googleLogInAppUserRequest);
             return Ok(response);
         }
     }
