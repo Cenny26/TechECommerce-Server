@@ -25,9 +25,9 @@ namespace TechECommerceServer.API.Controllers
         }
 
         [HttpPost] // POST: api/Users/LogInAppUser
-        public async Task<IActionResult> LogInAppUser([FromBody] LogInAppUserCommandRequest loginAppUserCommandRequest)
+        public async Task<IActionResult> LogInAppUser([FromBody] LogInAppUserCommandRequest logInAppUserCommandRequest)
         {
-            LogInAppUserCommandResponse response = await _mediator.Send(loginAppUserCommandRequest);
+            LogInAppUserCommandResponse response = await _mediator.Send(logInAppUserCommandRequest);
             return Ok(response);
         }
 
