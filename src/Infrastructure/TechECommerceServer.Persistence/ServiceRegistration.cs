@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using TechECommerceServer.Application.Abstractions.Repositories.File;
 using TechECommerceServer.Application.Abstractions.Repositories.Product;
 using TechECommerceServer.Application.Abstractions.Repositories.ProductImage;
+using TechECommerceServer.Application.Abstractions.Services.AppUser;
 using TechECommerceServer.Domain.Entities.Identity;
 using TechECommerceServer.Persistence.Concretes.Repositories.File;
 using TechECommerceServer.Persistence.Concretes.Repositories.Product;
 using TechECommerceServer.Persistence.Concretes.Repositories.ProductImage;
+using TechECommerceServer.Persistence.Concretes.Services.AppUser;
 using TechECommerceServer.Persistence.Configurations;
 using TechECommerceServer.Persistence.Contexts;
 
@@ -27,6 +29,8 @@ namespace TechECommerceServer.Persistence
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<TechECommerceServerDbContext>();
+
+            services.AddScoped<IAppUserService, AppUserService>();
 
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
