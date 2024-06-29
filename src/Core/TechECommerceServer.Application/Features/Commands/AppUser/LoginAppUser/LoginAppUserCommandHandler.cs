@@ -1,45 +1,30 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using TechECommerceServer.Application.Abstractions.Token;
-using TechECommerceServer.Application.Abstractions.Token.Utils;
+using TechECommerceServer.Application.Abstractions.Services.Authentications.Base;
 using TechECommerceServer.Application.Bases;
-using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
-using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
-using TechECommerceServer.Domain.DTOs.Auth;
+using TechECommerceServer.Domain.DTOs.AppUser;
 
 namespace TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser
 {
     public class LogInAppUserCommandHandler : BaseHandler, IRequestHandler<LogInAppUserCommandRequest, LogInAppUserCommandResponse>
     {
-        private readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
-        private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
-        private readonly BaseUserRules _userRules;
-        private readonly ITokenHandler _tokenHandler;
-        public LogInAppUserCommandHandler(IMapper _mapper, UserManager<Domain.Entities.Identity.AppUser> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager, BaseUserRules userRules, ITokenHandler tokenHandler) : base(_mapper)
+        private readonly IAuthService _authService;
+        public LogInAppUserCommandHandler(IMapper _mapper, IAuthService authService) : base(_mapper)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _userRules = userRules;
-            _tokenHandler = tokenHandler;
+            _authService = authService;
         }
 
         public async Task<LogInAppUserCommandResponse> Handle(LogInAppUserCommandRequest request, CancellationToken cancellationToken)
         {
-            Domain.Entities.Identity.AppUser? user = await _userManager.FindByNameAsync(request.UserNameOrEmail) ?? await _userManager.FindByEmailAsync(request.UserNameOrEmail);
-            await _userRules.GivenAppUserMustBeLoadWhenProcessToLogIn(user);
+            // note: map the incoming request to a DTO
+            LogInAppUserRequestDto logInAppUserRequestDto = _mapper.Map<LogInAppUserRequestDto>(request);
 
-            SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: false);
-            if (signInResult.Succeeded) // note: authentication was successful
-            {
-                Token token = _tokenHandler.CreateAccessToken(DefaultTokenVariables.StandardTokenValue); // note: default 60 minute for expire!
-                return new LogInAppUserCommandResponse()
-                {
-                    Token = token
-                };
-            }
+            // note: call the service and get the response
+            LogInAppUserResponseDto logInAppUserResponse = await _authService.LogInAppUserAsync(logInAppUserRequestDto, 60 * 60);
 
-            throw new UserLoginAuthenticationProcessException();
+            // note: map the service response to the command response and return it to API
+            LogInAppUserCommandResponse response = _mapper.Map<LogInAppUserCommandResponse>(logInAppUserResponse);
+            return response;
         }
     }
 }

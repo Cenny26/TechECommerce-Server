@@ -5,6 +5,7 @@ using TechECommerceServer.Application.Abstractions.Services.Authentications.Base
 using TechECommerceServer.Application.Abstractions.Token;
 using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
+using TechECommerceServer.Domain.DTOs.AppUser;
 using TechECommerceServer.Domain.DTOs.Auth;
 using TechECommerceServer.Domain.DTOs.Auth.Facebook;
 using TechECommerceServer.Domain.DTOs.Auth.Google;
@@ -18,13 +19,15 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
         private readonly BaseUserRules _userRules;
         private readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
         private readonly ITokenHandler _tokenHandler;
+        private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
         private readonly HttpClient _httpClient;
-        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler)
+        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<Domain.Entities.Identity.AppUser> signInManager)
         {
             _configuration = configuration;
             _userRules = userRules;
             _userManager = userManager;
             _tokenHandler = tokenHandler;
+            _signInManager = signInManager;
             _httpClient = httpClientFactory.CreateClient();
         }
 
@@ -136,6 +139,32 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             catch (Exception exc)
             {
                 throw new UserGoogleLoginAuthenticationProcessException();
+            }
+        }
+
+        public async Task<LogInAppUserResponseDto> LogInAppUserAsync(LogInAppUserRequestDto model, int accessTokenLifeTime)
+        {
+            Domain.Entities.Identity.AppUser? user = await _userManager.FindByNameAsync(model.UserNameOrEmail) ?? await _userManager.FindByEmailAsync(model.UserNameOrEmail);
+            // note: replacing the validation class with a simple rule instead
+            await _userRules.GivenAppUserMustBeLoadWhenProcessToLogIn(user);
+
+            try
+            {
+                SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
+                if (signInResult.Succeeded) // note: authentication was successful
+                {
+                    Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
+                    return new LogInAppUserResponseDto()
+                    {
+                        Token = token
+                    };
+                }
+
+                throw new UserLoginAuthenticationProcessException("The user was not verified during sign in process!");
+            }
+            catch (Exception exc)
+            {
+                throw new UserLoginAuthenticationProcessException("An unexpected error was encountered during the authentication process!");
             }
         }
     }
