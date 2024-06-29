@@ -9,6 +9,7 @@ using TechECommerceServer.Domain.DTOs.AppUser;
 using TechECommerceServer.Domain.DTOs.Auth;
 using TechECommerceServer.Domain.DTOs.Auth.Facebook;
 using TechECommerceServer.Domain.DTOs.Auth.Google;
+using TechECommerceServer.Persistence.Concretes.Services.Authentications.Utils;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Base
@@ -63,6 +64,10 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
         {
             string provider = _configuration["ExternalLoginSettings:OAuth:Facebook:Provider"] ?? "FACEBOOK"; // note: 'FACEBOOK'
 
+            string clientId = _configuration["ExternalLoginSettings:OAuth:Facebook:ClientId"]!;
+            string clientSecret = _configuration["ExternalLoginSettings:OAuth:Facebook:ClientSecret"]!;
+            string grantType = _configuration["ExternalLoginSettings:OAuth:Facebook:GrantType"]!;
+
             // note: replacing the validation class with a simple rule instead
             await _userRules.GivenTokenMustBeLoadWhenProcessToExternalLogIn(model.AuthToken, provider);
 
@@ -73,13 +78,13 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                 #endregion
 
                 // note: curl -X GET "https://graph.facebook.com/oauth/access_token?client_id={your-app-id}&client_secret={your-app-secret}&grant_type=client_credentials"
-                string accessTokenUrl = $"https://graph.facebook.com/oauth/access_token?client_id={_configuration["ExternalLoginSettings:OAuth:Facebook:ClientId"]}&client_secret={_configuration["ExternalLoginSettings:OAuth:Facebook:ClientSecret"]}&grant_type={_configuration["ExternalLoginSettings:OAuth:Facebook:GrantType"]}";
+                string accessTokenUrl = FacebookApiService.BuildAccessTokenUrl(clientId, clientSecret, grantType);
                 string accessTokenResponse = await _httpClient.GetStringAsync(accessTokenUrl);
 
                 FacebookAccessTokenResponseDto? facebookAccessTokenResponse = JsonSerializer.Deserialize<FacebookAccessTokenResponseDto>(accessTokenResponse);
 
                 // note: curl -i -X GET "https://graph.facebook.com/debug_token?input_token={input-token}&access_token={valid-access-token}
-                string userAccessTokenValidationUrl = $"https://graph.facebook.com/debug_token?input_token={model.AuthToken}&access_token={facebookAccessTokenResponse?.AccessToken}";
+                string userAccessTokenValidationUrl = FacebookApiService.BuildUserAccessTokenValidationUrl(model.AuthToken, facebookAccessTokenResponse?.AccessToken);
                 string userAccessTokenValidationResponse = await _httpClient.GetStringAsync(userAccessTokenValidationUrl);
 
                 FacebookUserAccessTokenValidationResponseDto? facebookUserAccessTokenValidationResponse = JsonSerializer.Deserialize<FacebookUserAccessTokenValidationResponseDto>(userAccessTokenValidationResponse);
@@ -87,7 +92,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                 if (facebookUserAccessTokenValidationResponse?.Data.IsValid is not null)
                 {
                     // note: curl -i -X GET "https://graph.facebook.com/USER-ID?fields=id,name,email,picture&access_token=ACCESS-TOKEN"
-                    string userInfoUrl = $"https://graph.facebook.com/me?fields=email,name&access_token={model.AuthToken}";
+                    string userInfoUrl = FacebookApiService.BuildUserInfoUrl(model.AuthToken);
                     string userInfoResponse = await _httpClient.GetStringAsync(userInfoUrl);
 
                     FacebookUserInfoResponseDto? facebookUserInfoResponse = JsonSerializer.Deserialize<FacebookUserInfoResponseDto>(userInfoResponse);
