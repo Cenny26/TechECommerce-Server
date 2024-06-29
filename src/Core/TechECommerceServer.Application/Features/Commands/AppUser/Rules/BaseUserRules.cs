@@ -21,18 +21,10 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.Rules
             return Task.CompletedTask;
         }
 
-        public Task GivenIdTokenMustBeLoadWhenProcessToGoogleLogIn(string idToken)
+        public Task GivenTokenMustBeLoadWhenProcessToExternalLogIn(string token, string provider)
         {
-            if (String.IsNullOrEmpty(idToken))
-                throw new InvalidOperationException("A problem was encountered accepting an external (Google) 'IdToken' value!");
-
-            return Task.CompletedTask;
-        }
-
-        public Task GivenAuthTokenMustBeLoadWhenProcessToFacebookLogIn(string authToken)
-        {
-            if (String.IsNullOrEmpty(authToken))
-                throw new InvalidOperationException("A problem was encountered accepting an external (Facebook) 'AuthToken' value!");
+            if (String.IsNullOrEmpty(token))
+                throw new InvalidOperationException($"A problem was encountered accepting an external ({provider}) 'IdToken' value!");
 
             return Task.CompletedTask;
         }
