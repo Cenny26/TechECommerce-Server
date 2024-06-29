@@ -4,6 +4,6 @@ namespace TechECommerceServer.Application.Abstractions.Services.Authentications
 {
     public interface IExternalAuthenticationService
     {
-        Task<FacebookLogInAppUserResponseDto> FacebookLogInAppUserAsync(FacebookLogInAppUserRequestDto model);
+        Task<FacebookLogInAppUserResponseDto> FacebookLogInAppUserAsync(FacebookLogInAppUserRequestDto model, int accessTokenLifeTime);
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ITokenHandler
     {
-        Domain.DTOs.Auth.Token CreateAccessToken(int minutes);
+        Domain.DTOs.Auth.Token CreateAccessToken(int seconds);
     }
 }

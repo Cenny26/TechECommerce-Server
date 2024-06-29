@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using TechECommerceServer.Application.Abstractions.Services.Authentications.Base;
 using TechECommerceServer.Application.Abstractions.Token;
-using TechECommerceServer.Application.Abstractions.Token.Utils;
 using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
 using TechECommerceServer.Domain.DTOs.Auth;
@@ -27,9 +26,9 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             _httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<FacebookLogInAppUserResponseDto> FacebookLogInAppUserAsync(FacebookLogInAppUserRequestDto model)
+        public async Task<FacebookLogInAppUserResponseDto> FacebookLogInAppUserAsync(FacebookLogInAppUserRequestDto model, int accessTokenLifeTime)
         {
-            string? provider = _configuration["ExternalLoginSettings:OAuth:Facebook:Provider"]; // note: 'FACEBOOK'
+            string provider = _configuration["ExternalLoginSettings:OAuth:Facebook:Provider"] ?? "FACEBOOK"; // note: 'FACEBOOK'
 
             // note: replacing the validation class with a simple rule instead
             await _userRules.GivenAuthTokenMustBeLoadWhenProcessToFacebookLogIn(model.AuthToken);
@@ -60,7 +59,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
 
                     FacebookUserInfoResponseDto? facebookUserInfoResponse = JsonSerializer.Deserialize<FacebookUserInfoResponseDto>(userInfoResponse);
 
-                    UserLoginInfo userLoginInfo = new UserLoginInfo(provider ?? "FACEBOOK", facebookUserAccessTokenValidationResponse.Data.UserId, provider ?? "FACEBOOK");
+                    UserLoginInfo userLoginInfo = new UserLoginInfo(provider, facebookUserAccessTokenValidationResponse.Data.UserId, provider);
                     Domain.Entities.Identity.AppUser? appUser = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
 
                     bool userResult = appUser is not null;
@@ -85,7 +84,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                     if (userResult)
                         await _userManager.AddLoginAsync(appUser, userLoginInfo);
 
-                    Token token = _tokenHandler.CreateAccessToken(DefaultTokenVariables.StandardTokenValue); // note: default 60 minute for expire!
+                    Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
                     return new FacebookLogInAppUserResponseDto()
                     {
                         Token = token

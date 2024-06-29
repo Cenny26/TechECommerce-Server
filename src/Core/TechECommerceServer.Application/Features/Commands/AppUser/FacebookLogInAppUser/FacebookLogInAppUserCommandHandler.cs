@@ -20,7 +20,7 @@ namespace TechECommerceServer.Application.Features.Commands.AppUser.FacebookLogI
             FacebookLogInAppUserRequestDto facebookLogInAppUserRequestDto = _mapper.Map<FacebookLogInAppUserRequestDto>(request);
 
             // note: call the service and get the response
-            FacebookLogInAppUserResponseDto facebookLogInAppUserResponse = await _authService.FacebookLogInAppUserAsync(facebookLogInAppUserRequestDto);
+            FacebookLogInAppUserResponseDto facebookLogInAppUserResponse = await _authService.FacebookLogInAppUserAsync(model: facebookLogInAppUserRequestDto, accessTokenLifeTime: 60 * 60);
 
             // note: map the service response to the command response and return it to API
             FacebookLogInAppUserCommandResponse response = _mapper.Map<FacebookLogInAppUserCommandResponse>(facebookLogInAppUserResponse);

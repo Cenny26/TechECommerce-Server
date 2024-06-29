@@ -14,7 +14,7 @@ namespace TechECommerceServer.Infrastructure.Services.Token
             _configuration = configuration;
         }
 
-        public Domain.DTOs.Auth.Token CreateAccessToken(int minutes)
+        public Domain.DTOs.Auth.Token CreateAccessToken(int seconds)
         {
             Domain.DTOs.Auth.Token token = new Domain.DTOs.Auth.Token();
 
@@ -25,7 +25,7 @@ namespace TechECommerceServer.Infrastructure.Services.Token
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             // note: giving the token settings to be created
-            token.ExpirationDate = DateTime.UtcNow.AddMinutes(minutes);
+            token.ExpirationDate = DateTime.UtcNow.AddSeconds(seconds);
             JwtSecurityToken securityToken = new JwtSecurityToken(
                 audience: _configuration["JWT:Token:Audience"],
                 issuer: _configuration["JWT:Token:Issuer"],
