@@ -4,11 +4,14 @@ using TechECommerceServer.Application.Abstractions.Repositories.File;
 using TechECommerceServer.Application.Abstractions.Repositories.Product;
 using TechECommerceServer.Application.Abstractions.Repositories.ProductImage;
 using TechECommerceServer.Application.Abstractions.Services.AppUser;
+using TechECommerceServer.Application.Abstractions.Services.Authentications;
+using TechECommerceServer.Application.Abstractions.Services.Authentications.Base;
 using TechECommerceServer.Domain.Entities.Identity;
 using TechECommerceServer.Persistence.Concretes.Repositories.File;
 using TechECommerceServer.Persistence.Concretes.Repositories.Product;
 using TechECommerceServer.Persistence.Concretes.Repositories.ProductImage;
 using TechECommerceServer.Persistence.Concretes.Services.AppUser;
+using TechECommerceServer.Persistence.Concretes.Services.Authentications.Base;
 using TechECommerceServer.Persistence.Configurations;
 using TechECommerceServer.Persistence.Contexts;
 
@@ -31,6 +34,9 @@ namespace TechECommerceServer.Persistence
             }).AddEntityFrameworkStores<TechECommerceServerDbContext>();
 
             services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<IExternalAuthenticationService, AuthService>();
+            services.AddScoped<IInternalAuthenticationService, AuthService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
