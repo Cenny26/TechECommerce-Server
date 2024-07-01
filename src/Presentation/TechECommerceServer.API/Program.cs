@@ -53,7 +53,8 @@ internal class Program
                     ValidateIssuerSigningKey = true, // note: it is the verification of the security key data, which means that the token value to be generated is a value belonging to our application
                     ValidAudience = builder.Configuration["JWT:Token:Audience"],
                     ValidIssuer = builder.Configuration["JWT:Token:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token:SecurityKey"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token:SecurityKey"])),
+                    LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires is not null ? expires > DateTime.UtcNow : false
                 };
             });
 
