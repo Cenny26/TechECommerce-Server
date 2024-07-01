@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TechECommerceServer.Persistence.Contexts;
@@ -11,9 +12,11 @@ using TechECommerceServer.Persistence.Contexts;
 namespace TechECommerceServer.Persistence.Migrations
 {
     [DbContext(typeof(TechECommerceServerDbContext))]
-    partial class TechECommerceServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701111337_migration_3")]
+    partial class migration_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,6 +254,7 @@ namespace TechECommerceServer.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("RefreshToken")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("RefreshTokenEndDate")

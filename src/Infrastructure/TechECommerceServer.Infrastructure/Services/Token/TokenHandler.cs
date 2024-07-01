@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using System.Text;
 using TechECommerceServer.Application.Abstractions.Token;
 
@@ -36,7 +37,19 @@ namespace TechECommerceServer.Infrastructure.Services.Token
             // note: here is an example of the token generator class
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             token.AccessToken = tokenHandler.WriteToken(securityToken);
+
+            string refreshToken = CreateRefreshToken();
+            token.RefreshToken = refreshToken;
+
             return token;
+        }
+
+        public string CreateRefreshToken()
+        {
+            byte[] bytes = new byte[32];
+            using RandomNumberGenerator randomNumber = RandomNumberGenerator.Create();
+            randomNumber.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
         }
     }
 }

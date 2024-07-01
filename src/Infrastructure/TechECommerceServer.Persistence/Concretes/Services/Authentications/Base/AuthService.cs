@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using TechECommerceServer.Application.Abstractions.Services.AppUser;
 using TechECommerceServer.Application.Abstractions.Services.Authentications.Base;
 using TechECommerceServer.Application.Abstractions.Token;
+using TechECommerceServer.Application.Abstractions.Token.Utils;
 using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
 using TechECommerceServer.Domain.DTOs.AppUser;
@@ -21,14 +24,16 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
         private readonly UserManager<Domain.Entities.Identity.AppUser> _userManager;
         private readonly ITokenHandler _tokenHandler;
         private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
+        private readonly IAppUserService _appUserService;
         private readonly HttpClient _httpClient;
-        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<Domain.Entities.Identity.AppUser> signInManager)
+        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<Domain.Entities.Identity.AppUser> signInManager, IAppUserService appUserService)
         {
             _configuration = configuration;
             _userRules = userRules;
             _userManager = userManager;
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
+            _appUserService = appUserService;
             _httpClient = httpClientFactory.CreateClient();
         }
 
@@ -57,6 +62,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                 await _userManager.AddLoginAsync(appUser, loginInfo);
 
             Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
+            await _appUserService.UpdateRefreshToken(token.RefreshToken, appUser, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
             return token;
         }
 
@@ -159,6 +165,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                 if (signInResult.Succeeded) // note: authentication was successful
                 {
                     Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
+                    await _appUserService.UpdateRefreshToken(token.RefreshToken, user, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
                     return new LogInAppUserResponseDto()
                     {
                         Token = token
@@ -171,6 +178,19 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             {
                 throw new UserLoginAuthenticationProcessException("An unexpected error was encountered during the authentication process!");
             }
+        }
+
+        public async Task<Token> RefreshTokenLogInAsync(string refreshToken)
+        {
+            Domain.Entities.Identity.AppUser? appUser = await _userManager.Users.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken);
+            if (appUser is not null && appUser?.RefreshTokenEndDate > DateTime.UtcNow)
+            {
+                Token token = _tokenHandler.CreateAccessToken(seconds: DefaultTokenVariables.StandardAccessTokenValueBySeconds);
+                await _appUserService.UpdateRefreshToken(token.RefreshToken, appUser, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
+                return token;
+            }
+            else
+                throw new NotUserFoundedException();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TechECommerceServer.Application.Abstractions.Services.AppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
 using TechECommerceServer.Domain.DTOs.AppUser;
 
@@ -50,6 +51,19 @@ namespace TechECommerceServer.Persistence.Concretes.Services.AppUser
             {
                 throw new OperationCanceledException("An unexpected error was encountered while creating the user!", exc);
             }
+        }
+
+        public async Task UpdateRefreshToken(string refreshToken, Domain.Entities.Identity.AppUser appUser, DateTime accessTokenDate, int addOnAccessTokenDate)
+        {
+            if (appUser is not null)
+            {
+                appUser.RefreshToken = refreshToken;
+                appUser.RefreshTokenEndDate = accessTokenDate.AddSeconds(addOnAccessTokenDate);
+
+                await _userManager.UpdateAsync(appUser);
+            }
+            else
+                throw new NotUserFoundedException();
         }
     }
 }

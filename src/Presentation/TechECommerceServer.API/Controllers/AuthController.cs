@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TechECommerceServer.Application.Features.Commands.AppUser.FacebookLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.RefreshTokenLogIn;
 
 namespace TechECommerceServer.API.Controllers
 {
@@ -34,6 +35,13 @@ namespace TechECommerceServer.API.Controllers
         public async Task<IActionResult> FacebookLogInAppUser([FromBody] FacebookLogInAppUserCommandRequest facebookLogInAppUserCommandRequest)
         {
             FacebookLogInAppUserCommandResponse response = await _mediator.Send(facebookLogInAppUserCommandRequest);
+            return Ok(response);
+        }
+
+        [HttpGet] // GET: api/Auth/RefreshTokenLogIn
+        public async Task<IActionResult> RefreshTokenLogIn([FromBody] RefreshTokenLogInCommandRequest refreshTokenLogInCommandRequest)
+        {
+            RefreshTokenLogInCommandResponse response = await _mediator.Send(refreshTokenLogInCommandRequest);
             return Ok(response);
         }
     }
