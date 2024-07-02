@@ -1,6 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core;
+using Serilog.Sinks.PostgreSQL;
+using System.Security.Claims;
 using System.Text;
+using TechECommerceServer.API.Configurations.ColumnWriters;
 using TechECommerceServer.Application;
 using TechECommerceServer.Application.Exceptions;
 using TechECommerceServer.Infrastructure;
@@ -20,6 +27,35 @@ internal class Program
             {
                 policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             });
+        });
+
+        Logger logger = new LoggerConfiguration()
+            .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("Default"), "Logs", needAutoCreateTable: true,
+            columnOptions: new Dictionary<string, ColumnWriterBase>
+            {
+                {"message", new RenderedMessageColumnWriter()},
+                {"message_template", new MessageTemplateColumnWriter()},
+                {"level", new LevelColumnWriter()},
+                {"time_stamp", new TimestampColumnWriter()},
+                {"exception", new ExceptionColumnWriter()},
+                {"log_event", new LogEventSerializedColumnWriter()},
+                {"user_name", new UserNameColumnWriter()}
+            })
+            .WriteTo.Seq(serverUrl: builder.Configuration.GetValue<string>("Seq:ServerUrl")!)
+            .Enrich.FromLogContext()
+            .MinimumLevel.Debug()
+            .CreateLogger();
+        builder.Host.UseSerilog(logger);
+
+        builder.Services.AddHttpLogging(logging =>
+        {
+            logging.LoggingFields = HttpLoggingFields.All;
+            logging.RequestHeaders.Add("sec-ch-ua");
+            logging.ResponseHeaders.Add("MyResponseHeader");
+            logging.MediaTypeOptions.AddText("application/javascript");
+            logging.RequestBodyLogLimit = 4096;
+            logging.ResponseBodyLogLimit = 4096;
+            logging.CombineLogs = true;
         });
 
         IWebHostEnvironment hostEnvironment = builder.Environment;
@@ -54,7 +90,8 @@ internal class Program
                     ValidAudience = builder.Configuration["JWT:Token:Audience"],
                     ValidIssuer = builder.Configuration["JWT:Token:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token:SecurityKey"])),
-                    LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires is not null ? expires > DateTime.UtcNow : false
+                    LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires is not null ? expires > DateTime.UtcNow : false,
+                    NameClaimType = ClaimTypes.Name // note: can get 'Name' propery from User.Identity.Name property
                 };
             });
 
@@ -73,11 +110,21 @@ internal class Program
         // Add services for file system.
         app.UseStaticFiles();
 
+        app.UseSerilogRequestLogging();
+        app.UseHttpLogging();
+
         app.UseCors();
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.Use(async (context, next) =>
+        {
+            string? userName = context.User?.Identity?.IsAuthenticated is not null || true ? context.User.Identity.Name : null;
+            LogContext.PushProperty("user_name", userName);
+            await next();
+        });
 
         app.MapControllers();
 

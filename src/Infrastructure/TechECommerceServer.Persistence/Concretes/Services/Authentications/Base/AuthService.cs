@@ -61,7 +61,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             if (userResult)
                 await _userManager.AddLoginAsync(appUser, loginInfo);
 
-            Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
+            Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime, appUser); // note: default 60 minute for expire!
             await _appUserService.UpdateRefreshToken(token.RefreshToken, appUser, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
             return token;
         }
@@ -164,7 +164,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
                 SignInResult signInResult = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
                 if (signInResult.Succeeded) // note: authentication was successful
                 {
-                    Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime); // note: default 60 minute for expire!
+                    Token token = _tokenHandler.CreateAccessToken(seconds: accessTokenLifeTime, user); // note: default 60 minute for expire!
                     await _appUserService.UpdateRefreshToken(token.RefreshToken, user, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
                     return new LogInAppUserResponseDto()
                     {
@@ -185,7 +185,7 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             Domain.Entities.Identity.AppUser? appUser = await _userManager.Users.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken);
             if (appUser is not null && appUser?.RefreshTokenEndDate > DateTime.UtcNow)
             {
-                Token token = _tokenHandler.CreateAccessToken(seconds: DefaultTokenVariables.StandardAccessTokenValueBySeconds);
+                Token token = _tokenHandler.CreateAccessToken(seconds: DefaultTokenVariables.StandardAccessTokenValueBySeconds, appUser);
                 await _appUserService.UpdateRefreshToken(token.RefreshToken, appUser, token.ExpirationDate, addOnAccessTokenDate: DefaultTokenVariables.StandardRefreshTokenValueBySeconds);
                 return token;
             }

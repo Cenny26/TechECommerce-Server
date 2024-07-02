@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using TechECommerceServer.Application.Abstractions.Token;
+using TechECommerceServer.Domain.Entities.Identity;
 
 namespace TechECommerceServer.Infrastructure.Services.Token
 {
@@ -15,7 +17,7 @@ namespace TechECommerceServer.Infrastructure.Services.Token
             _configuration = configuration;
         }
 
-        public Domain.DTOs.Auth.Token CreateAccessToken(int seconds)
+        public Domain.DTOs.Auth.Token CreateAccessToken(int seconds, AppUser appUser)
         {
             Domain.DTOs.Auth.Token token = new Domain.DTOs.Auth.Token();
 
@@ -32,7 +34,8 @@ namespace TechECommerceServer.Infrastructure.Services.Token
                 issuer: _configuration["JWT:Token:Issuer"],
                 expires: token.ExpirationDate,
                 notBefore: DateTime.UtcNow,
-                signingCredentials: signingCredentials);
+                signingCredentials: signingCredentials,
+                claims: new List<Claim> { new(ClaimTypes.Name, appUser.UserName) });
 
             // note: here is an example of the token generator class
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
