@@ -7,6 +7,8 @@ using System.Text;
 using TechECommerceServer.Application.Abstractions.Token;
 using TechECommerceServer.Domain.Entities.Identity;
 
+#nullable disable
+
 namespace TechECommerceServer.Infrastructure.Services.Token
 {
     public class TokenHandler : ITokenHandler
@@ -22,7 +24,7 @@ namespace TechECommerceServer.Infrastructure.Services.Token
             Domain.DTOs.Auth.Token token = new Domain.DTOs.Auth.Token();
 
             // note: getting the symmetry of the 'SecurityKey'
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Token:SecurityKey"]));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Token:SecurityKey"]!));
 
             // note: generating encrypted identity
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

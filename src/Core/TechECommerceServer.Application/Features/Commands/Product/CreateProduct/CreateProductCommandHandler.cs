@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using TechECommerceServer.Application.Abstractions.Hubs.Product;
 using TechECommerceServer.Application.Abstractions.Repositories.Product;
 using TechECommerceServer.Application.Bases;
 using TechECommerceServer.Application.Features.Commands.Product.Rules;
@@ -10,10 +11,12 @@ namespace TechECommerceServer.Application.Features.Commands.Product.CreateProduc
     {
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly BaseProductRules _productRules;
-        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository, BaseProductRules productRules, IMapper _mapper) : base(_mapper)
+        private readonly IProductHubService _productHubService;
+        public CreateProductCommandHandler(IMapper _mapper, IProductWriteRepository productWriteRepository, BaseProductRules productRules, IProductHubService productHubService) : base(_mapper)
         {
             _productWriteRepository = productWriteRepository;
             _productRules = productRules;
+            _productHubService = productHubService;
         }
 
         public async Task<Unit> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
@@ -24,7 +27,10 @@ namespace TechECommerceServer.Application.Features.Commands.Product.CreateProduc
 
             bool result = await _productWriteRepository.AddAsync(entity: product);
             if (result)
+            {
+                await _productHubService.ProductAddedMessageAsync($"{product.Title} - new product was added successfully!");
                 await _productWriteRepository.SaveChangesAsync();
+            }
 
             return Unit.Value;
         }

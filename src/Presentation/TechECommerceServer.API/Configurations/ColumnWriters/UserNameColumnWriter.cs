@@ -2,6 +2,8 @@
 using Serilog.Events;
 using Serilog.Sinks.PostgreSQL;
 
+#nullable disable
+
 namespace TechECommerceServer.API.Configurations.ColumnWriters
 {
     public class UserNameColumnWriter : ColumnWriterBase

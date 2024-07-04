@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\Core\TechECommerceServer.Application\TechECommerceServer.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.Infrastructure\TechECommerceServer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.Persistence\TechECommerceServer.Persistence.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TechECommerceServer.SignalR\TechECommerceServer.SignalR.csproj" />
   </ItemGroup>
 
   <ItemGroup>

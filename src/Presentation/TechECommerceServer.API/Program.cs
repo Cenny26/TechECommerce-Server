@@ -13,6 +13,7 @@ using TechECommerceServer.Application.Exceptions;
 using TechECommerceServer.Infrastructure;
 using TechECommerceServer.Infrastructure.Services.Storage.Local;
 using TechECommerceServer.Persistence;
+using TechECommerceServer.SignalR;
 
 internal class Program
 {
@@ -43,7 +44,7 @@ internal class Program
             })
             .WriteTo.Seq(serverUrl: builder.Configuration.GetValue<string>("Seq:ServerUrl")!)
             .Enrich.FromLogContext()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .CreateLogger();
         builder.Host.UseSerilog(logger);
 
@@ -68,6 +69,9 @@ internal class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddPersistenceServices();
 
+        // Add SignalR services (extension) to system.
+        builder.Services.AddSignalRServices();
+
         // Add services for storage system.
         builder.Services.AddStorage<LocalStorage>();
 
@@ -89,7 +93,7 @@ internal class Program
                     ValidateIssuerSigningKey = true, // note: it is the verification of the security key data, which means that the token value to be generated is a value belonging to our application
                     ValidAudience = builder.Configuration["JWT:Token:Audience"],
                     ValidIssuer = builder.Configuration["JWT:Token:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token:SecurityKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token:SecurityKey"]!)),
                     LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires is not null ? expires > DateTime.UtcNow : false,
                     NameClaimType = ClaimTypes.Name // note: can get 'Name' propery from User.Identity.Name property
                 };
@@ -127,6 +131,7 @@ internal class Program
         });
 
         app.MapControllers();
+        app.MapHubs();
 
         app.Run();
     }

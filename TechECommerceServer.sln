@@ -11,15 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{DCA9A361-44C1-4F3E-AC11-9020BC325276}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.Application", "src\Core\TechECommerceServer.Application\TechECommerceServer.Application.csproj", "{7E129706-67EB-4615-A4AF-55CCFB3649BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechECommerceServer.Application", "src\Core\TechECommerceServer.Application\TechECommerceServer.Application.csproj", "{7E129706-67EB-4615-A4AF-55CCFB3649BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.Domain", "src\Core\TechECommerceServer.Domain\TechECommerceServer.Domain.csproj", "{2EC068B9-09DB-4723-85C3-699D6BFF6AC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechECommerceServer.Domain", "src\Core\TechECommerceServer.Domain\TechECommerceServer.Domain.csproj", "{2EC068B9-09DB-4723-85C3-699D6BFF6AC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.Infrastructure", "src\Infrastructure\TechECommerceServer.Infrastructure\TechECommerceServer.Infrastructure.csproj", "{4B78FEEE-6104-4DE4-899B-216FEDEB8C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechECommerceServer.Infrastructure", "src\Infrastructure\TechECommerceServer.Infrastructure\TechECommerceServer.Infrastructure.csproj", "{4B78FEEE-6104-4DE4-899B-216FEDEB8C4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.Persistence", "src\Infrastructure\TechECommerceServer.Persistence\TechECommerceServer.Persistence.csproj", "{BBB2CCEA-F79A-4E1F-B80C-649D2B74CD14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechECommerceServer.Persistence", "src\Infrastructure\TechECommerceServer.Persistence\TechECommerceServer.Persistence.csproj", "{BBB2CCEA-F79A-4E1F-B80C-649D2B74CD14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.API", "src\Presentation\TechECommerceServer.API\TechECommerceServer.API.csproj", "{6B6A82A1-A5B9-4644-8B15-90E63ED12F47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechECommerceServer.API", "src\Presentation\TechECommerceServer.API\TechECommerceServer.API.csproj", "{6B6A82A1-A5B9-4644-8B15-90E63ED12F47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechECommerceServer.SignalR", "src\Infrastructure\TechECommerceServer.SignalR\TechECommerceServer.SignalR.csproj", "{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{6B6A82A1-A5B9-4644-8B15-90E63ED12F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B6A82A1-A5B9-4644-8B15-90E63ED12F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B6A82A1-A5B9-4644-8B15-90E63ED12F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{4B78FEEE-6104-4DE4-899B-216FEDEB8C4C} = {7974319A-1203-4633-AB35-5430FD4C2ECE}
 		{BBB2CCEA-F79A-4E1F-B80C-649D2B74CD14} = {7974319A-1203-4633-AB35-5430FD4C2ECE}
 		{6B6A82A1-A5B9-4644-8B15-90E63ED12F47} = {DCA9A361-44C1-4F3E-AC11-9020BC325276}
+		{A9F83E3A-F60D-4599-BEBF-0E5399D0FDDB} = {7974319A-1203-4633-AB35-5430FD4C2ECE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F3BAD26-BAFC-48CB-9A92-B15BB870FBE8}
