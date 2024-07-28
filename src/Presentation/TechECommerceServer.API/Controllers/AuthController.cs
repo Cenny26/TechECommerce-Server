@@ -6,6 +6,7 @@ using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUs
 using TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.PasswordReset;
 using TechECommerceServer.Application.Features.Commands.AppUser.RefreshTokenLogIn;
+using TechECommerceServer.Application.Features.Commands.AppUser.VerifyResetToken;
 
 namespace TechECommerceServer.API.Controllers
 {
@@ -52,6 +53,13 @@ namespace TechECommerceServer.API.Controllers
         {
             await _mediator.Send(passwordResetCommandRequest);
             return Ok(HttpStatusCode.Accepted);
+        }
+
+        [HttpPost] // POST: api/Auth/VerifyResetToken
+        public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenCommandRequest verifyResetTokenCommandRequest)
+        {
+            VerifyResetTokenCommandResponse response = await _mediator.Send(verifyResetTokenCommandRequest);
+            return Ok(response);
         }
     }
 }

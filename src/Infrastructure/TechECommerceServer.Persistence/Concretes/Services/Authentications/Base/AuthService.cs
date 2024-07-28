@@ -16,6 +16,7 @@ using TechECommerceServer.Domain.DTOs.Auth;
 using TechECommerceServer.Domain.DTOs.Auth.Facebook;
 using TechECommerceServer.Domain.DTOs.Auth.Google;
 using TechECommerceServer.Domain.DTOs.Auth.PasswordReset;
+using TechECommerceServer.Domain.DTOs.Auth.VerifyResetToken;
 using TechECommerceServer.Persistence.Concretes.Services.Authentications.Utils;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
@@ -225,6 +226,38 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             {
                 _logger.LogError(exc, "An error occurred while resetting password for email: {Email}", model.Email);
                 throw new Exception($"An error occurred while resetting password for email: {model.Email}", exc);
+            }
+            finally
+            {
+                _logger.LogDebug("Exiting {MethodName}", nameof(PasswordResetAsync));
+            }
+        }
+
+        public async Task<VerifyResetTokenResponseDto> VerifyResetTokenAsync(VerifyResetTokenRequestDto model)
+        {
+            _logger.LogDebug("Entering {MethodName} with user ID: {UserId}", nameof(VerifyResetTokenAsync), model.UserId);
+
+            Domain.Entities.Identity.AppUser? appUser = await _userManager.FindByIdAsync(model.UserId);
+
+            try
+            {
+                if (appUser is not null)
+                {
+                    model.ResetToken = model.ResetToken.UrlDecode();
+
+                    bool state = await _userManager.VerifyUserTokenAsync(appUser, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", model.ResetToken);
+                    return new VerifyResetTokenResponseDto()
+                    {
+                        State = state
+                    };
+                }
+
+                return new VerifyResetTokenResponseDto() { State = false };
+            }
+            catch (Exception exc)
+            {
+                _logger.LogError(exc, "An error occurred while verifying reset token value: {resetToken}", model.ResetToken);
+                throw new Exception($"An error occurred while verifying reset token value: {model.ResetToken}", exc);
             }
             finally
             {

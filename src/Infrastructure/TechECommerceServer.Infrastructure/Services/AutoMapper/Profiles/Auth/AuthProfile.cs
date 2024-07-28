@@ -3,10 +3,12 @@ using TechECommerceServer.Application.Features.Commands.AppUser.FacebookLogInApp
 using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.PasswordReset;
+using TechECommerceServer.Application.Features.Commands.AppUser.VerifyResetToken;
 using TechECommerceServer.Domain.DTOs.AppUser;
 using TechECommerceServer.Domain.DTOs.Auth.Facebook;
 using TechECommerceServer.Domain.DTOs.Auth.Google;
 using TechECommerceServer.Domain.DTOs.Auth.PasswordReset;
+using TechECommerceServer.Domain.DTOs.Auth.VerifyResetToken;
 
 namespace TechECommerceServer.Infrastructure.Services.AutoMapper.Profiles.Auth
 {
@@ -24,6 +26,9 @@ namespace TechECommerceServer.Infrastructure.Services.AutoMapper.Profiles.Auth
             CreateMap<LogInAppUserCommandResponse, LogInAppUserResponseDto>().ReverseMap();
 
             CreateMap<PasswordResetCommandRequest, PasswordResetRequestDto>().ReverseMap();
+
+            CreateMap<VerifyResetTokenCommandRequest, VerifyResetTokenRequestDto>().ReverseMap();
+            CreateMap<VerifyResetTokenCommandResponse, VerifyResetTokenResponseDto>().ReverseMap();
         }
     }
 }
