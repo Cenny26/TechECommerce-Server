@@ -65,6 +65,10 @@ internal class Program
             .AddJsonFile("appsettings.json", optional: false)
             .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true);
 
+        if (hostEnvironment.IsDevelopment())
+            builder.Configuration.AddUserSecrets<Program>();
+        builder.Configuration.AddEnvironmentVariables();
+
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddPersistenceServices();

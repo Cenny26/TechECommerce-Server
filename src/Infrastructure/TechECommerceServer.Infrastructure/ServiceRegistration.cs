@@ -2,10 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TechECommerceServer.Application.Abstractions.Cache;
+using TechECommerceServer.Application.Abstractions.Mail;
 using TechECommerceServer.Application.Abstractions.Storage;
 using TechECommerceServer.Application.Abstractions.Token;
 using TechECommerceServer.Domain.Enums;
 using TechECommerceServer.Infrastructure.Services.Cache;
+using TechECommerceServer.Infrastructure.Services.Mail;
 using TechECommerceServer.Infrastructure.Services.Storage;
 using TechECommerceServer.Infrastructure.Services.Storage.Azure;
 using TechECommerceServer.Infrastructure.Services.Storage.Local;
@@ -30,6 +32,7 @@ namespace TechECommerceServer.Infrastructure
 
             services.AddScoped<ITokenHandler, TokenHandler>();
             services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IMailService, MailService>();
             services.AddScoped<IRedisCacheService, RedisCacheService>();
 
             services.Configure<RedisCacheSettings>(configuration.GetSection("Cache:DefaultSettings"));
