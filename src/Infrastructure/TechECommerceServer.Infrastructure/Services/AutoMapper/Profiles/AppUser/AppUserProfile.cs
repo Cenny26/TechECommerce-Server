@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using TechECommerceServer.Application.Features.Commands.AppUser.CreateAppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.UpdatePassword;
 using TechECommerceServer.Domain.DTOs.AppUser;
+using TechECommerceServer.Domain.DTOs.AppUser.UpdatePassword;
 
 namespace TechECommerceServer.Infrastructure.Services.AutoMapper.Profiles.AppUser
 {
@@ -10,6 +12,8 @@ namespace TechECommerceServer.Infrastructure.Services.AutoMapper.Profiles.AppUse
         {
             CreateMap<CreateAppUserCommandRequest, CreateAppUserRequestDto>().ReverseMap();
             CreateMap<CreateAppUserCommandResponse, CreateAppUserResponseDto>().ReverseMap();
+
+            CreateMap<UpdatePasswordCommandRequest, UpdatePasswordRequestDto>().ReverseMap();
         }
     }
 }
