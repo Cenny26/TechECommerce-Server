@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TechECommerceServer.Application.Features.Commands.AppUser.FacebookLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.GoogleLogInAppUser;
 using TechECommerceServer.Application.Features.Commands.AppUser.LogInAppUser;
+using TechECommerceServer.Application.Features.Commands.AppUser.PasswordReset;
 using TechECommerceServer.Application.Features.Commands.AppUser.RefreshTokenLogIn;
 
 namespace TechECommerceServer.API.Controllers
@@ -43,6 +45,13 @@ namespace TechECommerceServer.API.Controllers
         {
             RefreshTokenLogInCommandResponse response = await _mediator.Send(refreshTokenLogInCommandRequest);
             return Ok(response);
+        }
+
+        [HttpPost] // POST: api/Auth/PasswordReset
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetCommandRequest passwordResetCommandRequest)
+        {
+            await _mediator.Send(passwordResetCommandRequest);
+            return Ok(HttpStatusCode.Accepted);
         }
     }
 }

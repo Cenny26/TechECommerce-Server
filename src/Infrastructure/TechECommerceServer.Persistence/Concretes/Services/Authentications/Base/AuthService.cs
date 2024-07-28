@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using TechECommerceServer.Application.Abstractions.Mail;
 using TechECommerceServer.Application.Abstractions.Services.AppUser;
 using TechECommerceServer.Application.Abstractions.Services.Authentications.Base;
 using TechECommerceServer.Application.Abstractions.Token;
 using TechECommerceServer.Application.Abstractions.Token.Utils;
 using TechECommerceServer.Application.Features.Commands.AppUser.Exceptions;
 using TechECommerceServer.Application.Features.Commands.AppUser.Rules;
+using TechECommerceServer.Application.Helpers.UrlCoding;
 using TechECommerceServer.Domain.DTOs.AppUser;
 using TechECommerceServer.Domain.DTOs.Auth;
 using TechECommerceServer.Domain.DTOs.Auth.Facebook;
 using TechECommerceServer.Domain.DTOs.Auth.Google;
+using TechECommerceServer.Domain.DTOs.Auth.PasswordReset;
 using TechECommerceServer.Persistence.Concretes.Services.Authentications.Utils;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
@@ -25,8 +29,10 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
         private readonly ITokenHandler _tokenHandler;
         private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
         private readonly IAppUserService _appUserService;
+        private readonly ILogger<AuthService> _logger;
+        private readonly IMailService _mailService;
         private readonly HttpClient _httpClient;
-        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<Domain.Entities.Identity.AppUser> signInManager, IAppUserService appUserService)
+        public AuthService(IConfiguration configuration, BaseUserRules userRules, IHttpClientFactory httpClientFactory, UserManager<Domain.Entities.Identity.AppUser> userManager, ITokenHandler tokenHandler, SignInManager<Domain.Entities.Identity.AppUser> signInManager, IAppUserService appUserService, ILogger<AuthService> logger, IMailService mailService)
         {
             _configuration = configuration;
             _userRules = userRules;
@@ -34,6 +40,8 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
             _appUserService = appUserService;
+            _logger = logger;
+            _mailService = mailService;
             _httpClient = httpClientFactory.CreateClient();
         }
 
@@ -191,6 +199,37 @@ namespace TechECommerceServer.Persistence.Concretes.Services.Authentications.Bas
             }
             else
                 throw new NotUserFoundedException();
+        }
+
+        public async Task PasswordResetAsync(PasswordResetRequestDto model)
+        {
+            _logger.LogDebug("Entering {MethodName} with email: {Email}", nameof(PasswordResetAsync), model.Email);
+
+            Domain.Entities.Identity.AppUser? appUser = await _userManager.FindByEmailAsync(model.Email);
+
+            try
+            {
+                if (appUser is not null)
+                {
+                    string resetToken = await _userManager.GeneratePasswordResetTokenAsync(appUser);
+                    resetToken = resetToken.UrlEncode();
+
+                    await _mailService.SendPasswordResetDemandMailAsync(appUser.Email!, appUser.Id, resetToken);
+                }
+                else
+                {
+                    throw new ArgumentNullException($"No user found with email: {model.Email}", nameof(model.Email));
+                }
+            }
+            catch (Exception exc)
+            {
+                _logger.LogError(exc, "An error occurred while resetting password for email: {Email}", model.Email);
+                throw new Exception($"An error occurred while resetting password for email: {model.Email}", exc);
+            }
+            finally
+            {
+                _logger.LogDebug("Exiting {MethodName}", nameof(PasswordResetAsync));
+            }
         }
     }
 }

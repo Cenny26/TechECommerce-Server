@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 using TechECommerceServer.Application.Abstractions.Mail;
+using TechECommerceServer.Infrastructure.Services.Mail.MessageBodies.Auth;
 
 namespace TechECommerceServer.Infrastructure.Services.Mail
 {
@@ -36,6 +37,14 @@ namespace TechECommerceServer.Infrastructure.Services.Mail
             smtpClient.EnableSsl = true;
 
             await smtpClient.SendMailAsync(mailMessage);
+        }
+
+        public async Task SendPasswordResetDemandMailAsync(string to, string userId, string resetToken)
+        {
+            string angularClientUrl = _configuration["BaseUrls:ClientUrls:AngularClientUrl"]!;
+            string mailBody = AuthOperationBodies.GetPasswordResetMailBody(angularClientUrl, userId, resetToken);
+
+            await SendMailAsync(to, "Password Renewal Request!", mailBody);
         }
     }
 }

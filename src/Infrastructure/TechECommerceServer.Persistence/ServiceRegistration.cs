@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TechECommerceServer.Application.Abstractions.Repositories.File;
 using TechECommerceServer.Application.Abstractions.Repositories.Product;
@@ -31,7 +32,7 @@ namespace TechECommerceServer.Persistence
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<TechECommerceServerDbContext>();
+            }).AddEntityFrameworkStores<TechECommerceServerDbContext>().AddDefaultTokenProviders();
 
             services.AddScoped<IAppUserService, AppUserService>();
             services.AddScoped<IExternalAuthenticationService, AuthService>();
